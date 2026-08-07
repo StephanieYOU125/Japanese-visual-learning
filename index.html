@@ -1,1 +1,429 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#315c4b"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="ことばの森"><link rel="icon" href="assets/icon.svg"><title>ことばの森｜動漫日文學習</title><script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script><style>*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans JP",sans-serif;background:#f7f4ed;color:#1f2926}.wrap{max-width:900px;margin:auto;padding:22px 16px 100px}header{padding:22px 0}h1{font-size:30px;margin:5px 0}.sub{color:#68746f;line-height:1.65}.card{background:#fffdf8;border:1px solid #ddd7ca;border-radius:22px;padding:18px;margin:14px 0;box-shadow:0 8px 30px #315c4b0d}button,.pick{border:0;border-radius:13px;padding:12px 15px;font-weight:750;font-size:15px;cursor:pointer}.primary{background:#315c4b;color:white}.orange{background:#d77746;color:white}.ghost{background:#eee9df;color:#315c4b}.danger{background:#f7dddd;color:#8b4a4a}.pick{display:inline-block;background:#315c4b;color:white}.pick input{display:none}.row{display:flex;gap:8px;flex-wrap:wrap}input,textarea,select{width:100%;border:1px solid #d8d1c5;border-radius:12px;padding:11px;background:white;font-size:16px}label{display:block;font-size:13px;font-weight:700;margin:12px 0 5px}.preview{margin-top:14px;background:#111;border-radius:17px;overflow:hidden}.preview img{width:100%;display:block}.progress{height:8px;background:#e7e0d5;border-radius:10px;overflow:hidden;margin:12px 0}.progress i{display:block;height:100%;width:0;background:#d77746}.jp{font-size:22px;font-weight:750;line-height:1.65;margin-top:8px}.kana{color:#315c4b;line-height:1.6}.zh{line-height:1.7}.tag{display:inline-block;padding:5px 8px;border-radius:99px;background:#e7efe9;font-size:11px;margin:2px 4px 2px 0}.lesson-image{width:100%;max-height:420px;object-fit:contain;background:#111;border-radius:16px;margin-bottom:13px}.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.hidden{display:none}.notice{background:#f8e7df;color:#795044;padding:11px;border-radius:12px;font-size:12px;line-height:1.6;margin-top:12px}.success{background:#e5f0e8;color:#376249}.nav{position:fixed;bottom:0;left:0;right:0;background:#fffdf8e8;backdrop-filter:blur(14px);border-top:1px solid #ddd7ca;padding:9px 10px calc(9px + env(safe-area-inset-bottom));display:flex;justify-content:center;gap:7px;z-index:9}.nav button{padding:10px 12px}.wordgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}.word{background:#fff;border:1px solid #ddd7ca;border-radius:15px;padding:14px}.word b{font-size:24px}.word small{display:block;color:#68746f;margin-top:5px}.scene{border-left:4px solid #315c4b}.details{background:#f4f1e9;border-radius:12px;padding:10px 12px;margin-top:10px;line-height:1.65}.details ul{padding-left:20px;margin:7px 0}.count{font-size:13px;color:#68746f;margin:8px 0}.image-note{font-size:12px;color:#68746f;margin:5px 0 0}@media(max-width:600px){h1{font-size:27px}.row>*{flex:1}.card{padding:16px}.nav button{font-size:13px;padding:9px}.lesson-image{max-height:330px}}</style></head><body><div class="wrap"><header><small>JAPANESE VISUAL LEARNING</small><h1>ことばの森 🌿</h1><div class="sub">動漫場景、圖片、單字與文法，集中在一個 iPhone 日文學習資料庫。</div></header><section id="home"><div class="card"><h2>📷 動漫截圖自動辨識</h2><p class="sub">從 iPhone 照片選擇截圖，OCR 日文字幕後可修正並收藏。</p><label class="pick">選擇動漫截圖<input id="img" type="file" accept="image/*"></label><div id="pv" class="preview hidden"><img id="pvi"></div><label>辨識範圍</label><select id="crop"><option value="all">整張</option><option value="middle">中下方</option><option value="bottom" selected>最下方字幕</option></select><button id="ocr" class="orange" style="width:100%;margin-top:12px">開始辨識日文</button><div id="prog" class="hidden"><div class="progress"><i id="bar"></i></div><div id="status" class="sub">準備中</div></div><label>日文原句</label><textarea id="jp" rows="3" placeholder="OCR 結果會出現在這裡，也可以手動修改"></textarea><label>平假名</label><input id="kana" placeholder="請確認後填寫／修改"><label>中文</label><textarea id="zh" rows="2" placeholder="用自己的話寫中文意思"></textarea><div class="row"><div><label>作品中文名</label><input id="anime" placeholder="例如：鬼滅之刃"></div><div><label>作品日文名</label><input id="animeja" placeholder="例如：鬼滅の刃"></div></div><label>文法／語感筆記</label><textarea id="note" rows="3"></textarea><div class="notice">OCR 可能把特殊字型、人名或中日字幕辨識錯誤，請對照原片確認。</div><button id="save" class="primary" style="width:100%;margin-top:14px">加入我的動漫日文</button></div><div class="card"><h2>N5～N1 單字入口</h2><div class="wordgrid" id="words"></div></div></section><section id="database" class="hidden"><div class="card"><h2>🎬 內建動漫資料庫</h2><p class="sub">每句教材都可以加入對應截圖。圖片會保存在目前裝置，並與該句教材綁定。</p><div class="notice success">操作方式：找到句子 → 按「加入／更換圖片」→ 從照片選擇相對應的截圖。</div><input id="dbsearch" placeholder="搜尋日文、中文、單字、文法"><div id="dbcount" class="count"></div><div id="dblist"></div></div></section><section id="library" class="hidden"><div class="card"><div class="row"><h2 style="flex:1">我的收藏</h2><button id="export" class="ghost">匯出備份</button></div><p class="sub">這裡是你自行新增的截圖與筆記。</p><input id="search" placeholder="搜尋日文、中文、作品"><div id="list"></div></div></section></div><input id="dbImagePicker" type="file" accept="image/*" class="hidden"><div class="nav"><button class="primary" onclick="show('home')">學習／新增</button><button class="ghost" onclick="show('database')">動漫資料庫</button><button class="ghost" onclick="show('library')">我的收藏</button></div><script>const $=s=>document.querySelector(s);let imageData='',builtIn=[],editingDBImageId='';const samples=[['N5','朝','あさ','早上'],['N5','学校','がっこう','學校'],['N4','向かう','むかう','前往、朝向'],['N4','準備','じゅんび','準備'],['N3','整う','ととのう','齊備、準備完成'],['N3','全く','まったく','完全、真是'],['N2','いちいち','いちいち','逐一、每次都'],['N1','赴く','おもむく','前往']];$('#words').innerHTML=samples.map(x=>`<div class="word"><span class="tag">${x[0]}</span><b>${x[1]}</b><small>${x[2]}</small><small>${x[3]}</small><button class="ghost" onclick="speak('${encodeURIComponent(x[1])}')">🔊</button></div>`).join('');function entries(){try{return JSON.parse(localStorage.getItem('kotobaEntries')||'[]')}catch(e){return[]}}function setEntries(v){localStorage.setItem('kotobaEntries',JSON.stringify(v))}function dbImages(){try{return JSON.parse(localStorage.getItem('kotobaDBImages')||'{}')}catch(e){return{}}}function setDBImages(v){localStorage.setItem('kotobaDBImages',JSON.stringify(v))}function show(id){['home','database','library'].forEach(x=>$('#'+x).classList.toggle('hidden',x!==id));if(id==='database')renderDB();if(id==='library')render()}function esc(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}async function loadDB(){try{let r=await fetch('data/anime-entries-2026-08-07.json',{cache:'no-store'});if(!r.ok)throw Error();builtIn=await r.json()}catch(e){builtIn=[]}}loadDB();function compressImage(file,maxWidth=1100,quality=.72){return new Promise((resolve,reject)=>{let reader=new FileReader,im=new Image;reader.onerror=reject;reader.onload=()=>im.src=reader.result;im.onerror=reject;im.onload=()=>{let scale=Math.min(1,maxWidth/im.width),c=document.createElement('canvas');c.width=Math.round(im.width*scale);c.height=Math.round(im.height*scale);c.getContext('2d').drawImage(im,0,0,c.width,c.height);resolve(c.toDataURL('image/jpeg',quality))};reader.readAsDataURL(file)})}$('#img').onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader;r.onload=()=>{imageData=r.result;$('#pvi').src=imageData;$('#pv').classList.remove('hidden')};r.readAsDataURL(f)};function cropCanvas(){let img=$('#pvi'),c=document.createElement('canvas'),mode=$('#crop').value,y=0,h=img.naturalHeight;if(mode==='middle'){y=h*.35;h*=.45}else if(mode==='bottom'){y=h*.58;h*=.4}let scale=Math.min(2,1600/img.naturalWidth);c.width=img.naturalWidth*scale;c.height=h*scale;c.getContext('2d').drawImage(img,0,y,img.naturalWidth,h,0,0,c.width,c.height);return c}$('#ocr').onclick=async()=>{if(!imageData)return alert('請先選擇截圖');$('#prog').classList.remove('hidden');let worker;try{worker=await Tesseract.createWorker('jpn',1,{logger:m=>{if(typeof m.progress==='number'){$('#bar').style.width=Math.round(m.progress*100)+'%';$('#status').textContent=(m.status||'辨識中')+' '+Math.round(m.progress*100)+'%'}}});let r=await worker.recognize(cropCanvas());$('#jp').value=(r.data.text||'').replace(/[ |｜]/g,'').trim();$('#status').textContent='完成，請確認辨識結果'}catch(e){alert('辨識失敗，請確認網路或改選更清楚的截圖')}finally{if(worker)worker.terminate()}};$('#save').onclick=async()=>{if(!$('#jp').value.trim())return alert('請先輸入或辨識日文');let a=entries(),savedImage=imageData;if(imageData.startsWith('data:')){try{let b=await fetch(imageData),f=new File([await b.blob()],'image.jpg',{type:'image/jpeg'});savedImage=await compressImage(f)}catch(e){}}a.unshift({id:Date.now(),jp:$('#jp').value.trim(),kana:$('#kana').value.trim(),zh:$('#zh').value.trim(),anime:$('#anime').value.trim(),animeja:$('#animeja').value.trim(),note:$('#note').value.trim(),image:savedImage});try{setEntries(a);alert('已加入我的收藏');['jp','kana','zh','anime','animeja','note'].forEach(id=>$('#'+id).value='');imageData='';$('#pv').classList.add('hidden')}catch(e){alert('儲存空間不足，請先匯出備份或使用較小截圖')}};function chooseDBImage(id){editingDBImageId=id;$('#dbImagePicker').value='';$('#dbImagePicker').click()}$('#dbImagePicker').onchange=async e=>{let f=e.target.files[0];if(!f||!editingDBImageId)return;try{let data=await compressImage(f),map=dbImages();map[editingDBImageId]=data;setDBImages(map);renderDB();alert('圖片已加入這句動漫日文')}catch(err){alert('圖片處理失敗，請改用另一張圖片')}};function removeDBImage(id){if(!confirm('要移除這句教材的圖片嗎？'))return;let map=dbImages();delete map[id];setDBImages(map);renderDB()}function renderDB(){let q=$('#dbsearch').value.toLowerCase(),map=dbImages(),a=builtIn.filter(x=>JSON.stringify(x).toLowerCase().includes(q));$('#dbcount').textContent=`共 ${a.length} 句教材，其中 ${a.filter(x=>x.image||map[x.id]).length} 句已有圖片`;$('#dblist').innerHTML=a.length?a.map(x=>{let img=x.image||map[x.id]||'';return `<div class="card scene">${img?`<img class="lesson-image" src="${img}" alt="${esc(x.jp)}">`:''}<div><span class="tag">${esc(x.level||'動漫日文')}</span><span class="tag">${esc(x.scene||'場景')}</span>${img?'<span class="tag">已有圖片</span>':'<span class="tag">尚無圖片</span>'}</div><div class="jp">${esc(x.jp)}</div><div class="kana">${esc(x.kana)}</div><p class="zh">${esc(x.zh)}</p>${x.words?.length?`<div class="details"><b>🔤 單字拆解</b><ul>${x.words.map(w=>`<li><b>${esc(w.word)}</b>（${esc(w.kana)}）＝ ${esc(w.zh)}</li>`).join('')}</ul></div>`:''}${x.grammar?.length?`<div class="details"><b>🧠 文法／語感</b><ul>${x.grammar.map(g=>`<li>${esc(g)}</li>`).join('')}</ul></div>`:''}${x.note?`<div class="notice">${esc(x.note)}</div>`:''}<div class="actions"><button class="ghost" onclick="speak('${encodeURIComponent(x.jp)}')">🔊 朗讀</button><button class="primary" onclick="chooseDBImage('${x.id}')">📷 ${img?'更換圖片':'加入圖片'}</button>${img?`<button class="danger" onclick="removeDBImage('${x.id}')">移除圖片</button>`:''}</div><p class="image-note">圖片目前保存在這台裝置；GitHub 內建教材文字仍會跨裝置顯示。</p></div>`}).join(''):'<p class="sub">找不到符合的教材。</p>'}function render(){let q=$('#search').value.toLowerCase(),a=entries().filter(x=>[x.jp,x.kana,x.zh,x.anime,x.animeja].join(' ').toLowerCase().includes(q));$('#list').innerHTML=a.length?a.map(x=>`<div class="card">${x.image?`<img class="lesson-image" src="${x.image}">`:''}<div>${x.anime?`<span class="tag">${esc(x.anime)}</span>`:''}</div><div class="jp">${esc(x.jp)}</div><div class="kana">${esc(x.kana)}</div><p class="zh">${esc(x.zh)}</p>${x.note?`<div class="details"><b>文法／語感</b><br>${esc(x.note)}</div>`:''}<div class="actions"><button class="ghost" onclick="speak('${encodeURIComponent(x.jp)}')">🔊 朗讀</button><button class="danger" onclick="del(${x.id})">刪除</button></div></div>`).join(''):'<p class="sub">還沒有裝置收藏。你可以從「學習／新增」加入截圖。</p>'}function speak(t){let u=new SpeechSynthesisUtterance(decodeURIComponent(t));u.lang='ja-JP';speechSynthesis.speak(u)}function del(id){if(confirm('確定刪除？')){setEntries(entries().filter(x=>x.id!==id));render()}}$('#search').oninput=render;$('#dbsearch').oninput=renderDB;$('#export').onclick=()=>{let payload={localEntries:entries(),builtInImages:dbImages(),exportedAt:new Date().toISOString()},b=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='kotoba-backup.json';a.click()};</script></body></html>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="用圖像、語感、拆字與動漫截圖學習日文。" />
+  <meta name="theme-color" content="#315c4b" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="ことばの森" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+  <title>ことばの森｜圖像化日文學習室</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#">
+      <span class="brand-mark">こ</span>
+      <span>
+        <strong>ことばの森</strong>
+        <small>圖像化日文學習室</small>
+      </span>
+    </a>
+    <nav>
+      <button class="nav-btn active" data-view="words">單字</button>
+      <button class="nav-btn" data-view="grammar">文法</button>
+      <button class="nav-btn" data-view="review">複習</button>
+      <button class="nav-btn" data-view="anime">動漫日文</button>
+      <button class="nav-btn" data-view="library">我的收藏</button>
+    </nav>
+    <div class="cloud-account">
+      <span id="cloudStatus" class="cloud-status">僅儲存在這台裝置</span>
+      <button id="googleLoginBtn" class="secondary-btn cloud-login">Google 登入</button>
+      <button id="googleLogoutBtn" class="secondary-btn cloud-login hidden">登出</button>
+    </div>
+    <button id="themeBtn" class="icon-btn" aria-label="切換深色模式">☾</button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <span class="eyebrow">Visual Japanese Learning</span>
+        <h1>不要只背翻譯，<br><em>看見日文的畫面。</em></h1>
+        <p>從圖像聯想、假名、漢字拆解、日常例句到語感差異，建立真正能拿來說的日文。</p>
+      </div>
+      <div class="hero-scene" aria-hidden="true">
+        <div class="sun"></div>
+        <div class="mountain m1"></div>
+        <div class="mountain m2"></div>
+        <div class="torii">鳥居</div>
+        <div class="cloud c1">☁</div>
+        <div class="cloud c2">☁</div>
+      </div>
+    </section>
+
+    <section id="wordsView" class="view active-view">
+      <div class="toolbar">
+        <div class="level-tabs" id="levelTabs">
+          <button class="level active" data-level="ALL">全部</button>
+          <button class="level" data-level="N5">N5</button>
+          <button class="level" data-level="N4">N4</button>
+          <button class="level" data-level="N3">N3</button>
+          <button class="level" data-level="N2">N2</button>
+          <button class="level" data-level="N1">N1</button>
+        </div>
+        <label class="search-box">
+          <span>⌕</span>
+          <input id="searchInput" type="search" placeholder="搜尋日文、假名或中文…" />
+        </label>
+      </div>
+
+      <div class="section-heading">
+        <div>
+          <span class="kicker">TODAY'S WORDS</span>
+          <h2>今天想記住哪些畫面？</h2>
+        </div>
+        <div class="progress-wrap">
+          <span id="progressText">已學會 0 / 10</span>
+          <div class="progress"><i id="progressBar"></i></div>
+        </div>
+      </div>
+
+      <div id="wordGrid" class="word-grid"></div>
+      <div id="emptyState" class="empty-state hidden">找不到符合條件的單字。</div>
+    </section>
+
+    <section id="grammarView" class="view">
+      <div class="section-heading">
+        <div>
+          <span class="kicker">GRAMMAR FEELING</span>
+          <h2>文法不是公式，是說話者的視角</h2>
+        </div>
+      </div>
+      <div id="grammarGrid" class="grammar-grid"></div>
+    </section>
+
+    <section id="reviewView" class="view">
+      <div class="review-shell">
+        <div class="review-top">
+          <div>
+            <span class="kicker">QUICK REVIEW</span>
+            <h2>翻牌測驗</h2>
+            <p>先看圖像與日文，在腦中說出中文和例句，再翻牌確認。</p>
+          </div>
+          <button id="shuffleBtn" class="primary-btn">重新洗牌</button>
+        </div>
+        <div id="flashcard" class="flashcard" tabindex="0" role="button" aria-label="翻開單字卡">
+          <div class="flashcard-inner">
+            <div class="flash-face flash-front">
+              <span id="flashLevel" class="pill"></span>
+              <div id="flashVisual" class="flash-visual"></div>
+              <h3 id="flashWord"></h3>
+              <p id="flashKana"></p>
+              <small>點一下翻面</small>
+            </div>
+            <div class="flash-face flash-back">
+              <span id="flashMeaning" class="flash-meaning"></span>
+              <p id="flashSentence" class="jp-sentence"></p>
+              <p id="flashTranslation"></p>
+              <div id="flashFeeling" class="feeling-note"></div>
+              <small>點一下換下一張</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="animeView" class="view">
+      <div class="section-heading">
+        <div>
+          <span class="kicker">ANIME JAPANESE</span>
+          <h2>從動漫裡，把喜歡的日文留下來</h2>
+          <p class="section-intro">依作品分類，記錄台詞、單字、語感、角色與出現情境。</p>
+        </div>
+        <div class="heading-actions">
+          <button class="secondary-btn" id="exportDataBtn">匯出備份</button>
+          <label class="secondary-btn file-button">匯入備份<input id="importDataInput" type="file" accept=".json,application/json" hidden></label>
+          <button class="secondary-btn" id="installAppBtn">加入 iPhone 主畫面</button>
+          <button class="secondary-btn" id="startAnimeReviewBtn">開始複習</button>
+          <button class="ocr-main-btn" id="openOcrBtn">📷 截圖自動辨識</button>
+          <button class="primary-btn" id="openAnimeFormBtn">＋ 手動新增</button>
+        </div>
+      </div>
+
+      <div class="anime-filter-bar">
+        <label class="search-box">
+          <span>⌕</span>
+          <input id="animeSearchInput" type="search" placeholder="搜尋作品、角色、台詞或中文…" />
+        </label>
+        <select id="animeSeriesFilter" class="select-control">
+          <option value="ALL">全部作品</option>
+        </select>
+        <select id="animeStatusFilter" class="select-control">
+          <option value="ALL">全部狀態</option>
+          <option value="new">新加入</option>
+          <option value="learning">學習中</option>
+          <option value="mastered">已熟悉</option>
+          <option value="verify">待確認</option>
+        </select>
+      </div>
+
+      <div id="animeSeriesGrid" class="anime-series-grid"></div>
+      <div id="animeEmptyState" class="empty-state hidden">還沒有收藏動漫日文，先新增第一句吧。</div>
+    </section>
+
+    <section id="libraryView" class="view">
+      <div class="section-heading">
+        <div>
+          <span class="kicker">MY JAPANESE LIBRARY</span>
+          <h2>我想記住的日文</h2>
+          <p class="section-intro">新增自己看到的單字或句子，之後可以持續編輯、分類與累積。</p>
+        </div>
+        <button class="primary-btn" id="openLibraryFormBtn">＋ 新增內容</button>
+      </div>
+
+      <div class="library-toolbar">
+        <div class="level-tabs" id="customTypeTabs">
+          <button class="level active" data-custom-type="ALL">全部</button>
+          <button class="level" data-custom-type="word">單字</button>
+          <button class="level" data-custom-type="sentence">句子</button>
+          <button class="level" data-custom-type="grammar">文法</button>
+        </div>
+        <label class="search-box">
+          <span>⌕</span>
+          <input id="librarySearchInput" type="search" placeholder="搜尋自己的收藏…" />
+        </label>
+      </div>
+
+      <div class="library-stats" id="libraryStats"></div>
+      <div id="customLibraryGrid" class="custom-library-grid"></div>
+      <div id="libraryEmptyState" class="empty-state hidden">你的個人日文資料庫目前還是空的。</div>
+    </section>
+
+  </main>
+
+  <dialog id="wordDialog">
+    <button class="dialog-close" id="dialogClose" aria-label="關閉">×</button>
+    <div id="dialogContent"></div>
+  </dialog>
+
+
+  <dialog id="entryDialog" class="editor-dialog">
+    <button class="dialog-close" id="entryDialogClose" aria-label="關閉">×</button>
+    <form id="entryForm" class="editor-form">
+      <input type="hidden" id="entryId" />
+      <input type="hidden" id="entryMode" value="library" />
+
+      <div class="editor-heading">
+        <span class="kicker" id="entryFormKicker">NEW ENTRY</span>
+        <h2 id="entryFormTitle">新增日文內容</h2>
+        <p>空白欄位可以先略過，之後再回來補充。</p>
+      </div>
+
+      <div class="form-grid">
+        <label>
+          <span>內容類型</span>
+          <select id="entryType" class="select-control">
+            <option value="word">單字</option>
+            <option value="sentence">句子</option>
+            <option value="grammar">文法</option>
+          </select>
+        </label>
+        <label>
+          <span>JLPT 等級</span>
+          <select id="entryLevel" class="select-control">
+            <option value="未分類">未分類</option>
+            <option value="N5">N5</option>
+            <option value="N4">N4</option>
+            <option value="N3">N3</option>
+            <option value="N2">N2</option>
+            <option value="N1">N1</option>
+          </select>
+        </label>
+      </div>
+      <div class="form-grid">
+        <label><span>學習狀態</span>
+          <select id="entryStatus" class="select-control">
+            <option value="new">新加入</option>
+            <option value="learning">學習中</option>
+            <option value="mastered">已熟悉</option>
+            <option value="verify">待確認</option>
+          </select>
+        </label>
+        <label><span>難度（1～5）</span>
+          <select id="entryDifficulty" class="select-control">
+            <option value="1">1｜很容易</option><option value="2">2｜容易</option>
+            <option value="3" selected>3｜普通</option><option value="4">4｜困難</option>
+            <option value="5">5｜很困難</option>
+          </select>
+        </label>
+      </div>
+      <label><span>標籤</span><input id="entryTags" type="text" placeholder="例如：通勤、口語、女僕、N4（以逗號分隔）"></label>
+
+      <div id="animeFields" class="anime-fields hidden">
+        <div class="form-grid">
+          <label><span>動漫中文名稱 *</span><input id="animeTitleZh" type="text" placeholder="例如：鬼滅之刃" /></label>
+          <label><span>動漫日文名稱</span><input id="animeTitleJa" type="text" placeholder="例如：鬼滅の刃" /></label>
+        </div>
+        <div class="form-grid">
+          <label><span>角色名稱</span><input id="animeCharacter" type="text" placeholder="例如：竈門炭治郎" /></label>
+          <label><span>集數／場景</span><input id="animeScene" type="text" placeholder="例如：第 1 集、車站場景" /></label>
+        </div>
+        <div class="form-grid">
+          <label><span>觀看網址</span><input id="animeSourceUrl" type="url" placeholder="https://youtu.be/..." /></label>
+          <label><span>時間點</span><input id="animeTimestamp" type="text" placeholder="例如：03:18" /></label>
+        </div>
+        <label class="check-label"><input id="animeVerified" type="checkbox"> 我已對照原始影片確認日文字幕與讀音</label>
+      </div>
+
+      <label><span>日文漢字／原句 *</span><textarea id="entryJapanese" rows="3" placeholder="輸入想記住的日文"></textarea></label>
+
+      <div class="form-grid">
+        <label><span>平假名</span><input id="entryHiragana" type="text" placeholder="例如：きょうはつかれました" /></label>
+        <label><span>片假名</span><input id="entryKatakana" type="text" placeholder="例如：キョウハツカレマシタ" /></label>
+      </div>
+
+      <label><span>中文意思 *</span><textarea id="entryChinese" rows="2" placeholder="輸入中文意思"></textarea></label>
+
+      <label><span>日常例句／延伸句子</span><textarea id="entryExample" rows="3" placeholder="把它改寫成自己真的會使用的句子"></textarea></label>
+
+      <label><span>日文語感／使用情境</span><textarea id="entryFeeling" rows="3" placeholder="例如：比正式說法更口語，帶有驚訝的感覺"></textarea></label>
+
+      <label><span>拆字／記憶方式</span><textarea id="entryBreakdown" rows="3" placeholder="例如：休＝人靠著樹休息"></textarea></label>
+
+      <section class="analysis-builder">
+        <div class="analysis-builder-head">
+          <div><span class="kicker">WORD BREAKDOWN</span><h3>逐字／逐詞分析</h3></div>
+          <button type="button" class="secondary-btn" id="addTokenBtn">＋ 新增一格</button>
+        </div>
+        <p class="form-help">將句子拆成單字或文法單位，填入讀音、詞性與中文。</p>
+        <div id="tokenRows" class="token-rows"></div>
+      </section>
+
+      <div class="form-grid">
+        <label><span>文法重點</span><input id="animeGrammarPoint" type="text" placeholder="例如：〜てしまう" /></label>
+        <label><span>文法結構</span><input id="animeGrammarPattern" type="text" placeholder="例如：動詞て形＋しまう" /></label>
+      </div>
+      <label><span>文法解釋與語感</span><textarea id="animeGrammarNote" rows="3" placeholder="說明意思、情緒與口語感"></textarea></label>
+
+      <label class="image-upload">
+        <span>上傳圖片</span>
+        <input id="entryImage" type="file" accept="image/*" />
+        <div class="image-preview" id="entryImagePreview">
+          <span>選擇圖片後會顯示在這裡</span>
+        </div>
+      </label>
+
+      <div class="form-actions">
+        <button type="button" class="secondary-btn" id="cancelEntryBtn">取消</button>
+        <button type="submit" class="primary-btn">儲存到我的資料庫</button>
+      </div>
+    </form>
+  </dialog>
+
+
+  <dialog id="animeReviewDialog" class="review-dialog">
+    <button class="dialog-close" id="animeReviewClose" aria-label="關閉">×</button>
+    <div class="review-panel">
+      <div class="review-panel-head">
+        <span class="kicker">ANIME REVIEW</span>
+        <h2>動漫句子複習</h2>
+        <p id="animeReviewCounter"></p>
+      </div>
+      <div id="animeReviewImage" class="review-image"></div>
+      <div id="animeReviewPrompt" class="review-prompt"></div>
+      <button id="revealAnimeAnswerBtn" class="primary-btn">顯示答案</button>
+      <div id="animeReviewAnswer" class="review-answer hidden"></div>
+      <div id="animeReviewActions" class="review-rating hidden">
+        <button data-rating="again">再複習</button>
+        <button data-rating="learning">還不熟</button>
+        <button data-rating="mastered">已熟悉</button>
+      </div>
+    </div>
+  </dialog>
+
+
+  <dialog id="ocrDialog" class="ocr-dialog">
+    <button class="dialog-close" id="ocrDialogClose" aria-label="關閉">×</button>
+    <div class="ocr-shell">
+      <div class="ocr-heading">
+        <span class="kicker">SCREENSHOT OCR</span>
+        <h2>從動漫截圖擷取日文</h2>
+        <p>選擇照片後，先調整字幕範圍，再進行辨識。第一次使用會下載日文辨識資料，需要網路。</p>
+      </div>
+
+      <label class="photo-picker">
+        <input id="ocrImageInput" type="file" accept="image/*" capture="environment">
+        <span>📷 拍照或從照片選擇截圖</span>
+      </label>
+
+      <div id="ocrWorkspace" class="ocr-workspace hidden">
+        <div class="ocr-canvas-wrap">
+          <canvas id="ocrCanvas"></canvas>
+          <div id="cropOverlay" class="crop-overlay"></div>
+        </div>
+
+        <div class="crop-controls">
+          <label><span>字幕範圍上緣</span><input id="cropTopRange" type="range" min="0" max="90" value="45"></label>
+          <label><span>字幕範圍下緣</span><input id="cropBottomRange" type="range" min="10" max="100" value="82"></label>
+          <div class="crop-presets">
+            <button type="button" data-crop="full">整張圖片</button>
+            <button type="button" data-crop="middle">畫面中下方</button>
+            <button type="button" data-crop="bottom">最下方字幕</button>
+          </div>
+        </div>
+
+        <button id="runOcrBtn" class="ocr-main-btn wide-btn">開始辨識日文字幕</button>
+        <div id="ocrProgressBox" class="ocr-progress hidden">
+          <div class="progress"><i id="ocrProgressBar"></i></div>
+          <span id="ocrProgressText">準備辨識……</span>
+        </div>
+
+        <div id="ocrResultBox" class="ocr-result hidden">
+          <label><span>辨識出的日文（可以修正）</span>
+            <textarea id="ocrJapaneseText" rows="4"></textarea>
+          </label>
+          <div class="form-grid">
+            <label><span>自動平假名</span><textarea id="ocrHiraganaText" rows="3"></textarea></label>
+            <label><span>自動片假名</span><textarea id="ocrKatakanaText" rows="3"></textarea></label>
+          </div>
+          <div id="ocrTokensPreview" class="ocr-token-preview"></div>
+          <div id="ocrGrammarHints" class="ocr-hints"></div>
+          <div class="verification-warning">OCR、讀音與文法提示可能出錯，尤其是特殊字型、專有名詞和模糊字幕。儲存後會自動標示為「待確認」。</div>
+          <div class="form-actions">
+            <button type="button" class="secondary-btn" id="retryOcrBtn">重新辨識</button>
+            <button type="button" class="primary-btn" id="useOcrResultBtn">帶入動漫學習表單</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="installHelpDialog" class="install-help-dialog">
+    <button class="dialog-close" id="installHelpClose" aria-label="關閉">×</button>
+    <div class="install-help">
+      <span class="kicker">INSTALL ON IPHONE</span>
+      <h2>加入 iPhone 主畫面</h2>
+      <ol>
+        <li>請先用 Safari 開啟 GitHub Pages 網址。</li>
+        <li>按 Safari 下方或上方的「分享」圖示。</li>
+        <li>往下選擇「加入主畫面」。</li>
+        <li>按「新增」，之後就能像 App 一樣開啟。</li>
+      </ol>
+      <p>安裝後可快速開啟，已載入過的網站頁面也能離線使用；第一次 OCR 仍需要網路下載辨識模型。</p>
+    </div>
+  </dialog>
+
+  <footer>
+    <span>ことばの森</span>
+    <p>用畫面理解，用生活記住。</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/kuromoji@0.1.2/build/kuromoji.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore-compat.js"></script>
+  <script src="firebase-cloud.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

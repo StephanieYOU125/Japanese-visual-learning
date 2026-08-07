@@ -1,0 +1,26 @@
+{
+  "id": "./",
+  "name": "ことばの森｜圖像化日文學習室",
+  "short_name": "ことばの森",
+  "description": "在 iPhone 上用動漫截圖、OCR、假名與文法拆解學日文。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f4ed",
+  "theme_color": "#315c4b",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
