@@ -44,6 +44,98 @@
   </header>
 
   <main>
+
+<section id="animeUploadStudio" class="anime-upload-studio">
+  <div class="anime-studio-head">
+    <div>
+      <span class="anime-kicker">ANIME SCREENSHOT LEARNING</span>
+      <h2>📷 上傳動漫截圖學日文</h2>
+      <p>選一張你正在看的動漫截圖，裁切日文字幕後自動辨識，再整理成可以複習的情境卡。</p>
+    </div>
+    <button id="animeQuickPickBtn" class="anime-primary">＋ 選擇截圖</button>
+  </div>
+
+  <div class="anime-studio-grid">
+    <div class="anime-shot-column">
+      <label class="anime-drop-zone">
+        <input id="animeShotInput" type="file" accept="image/*">
+        <strong>從 iPhone 相簿或電腦選擇截圖</strong>
+        <small>建議選擇有清楚日文字幕的畫面</small>
+      </label>
+
+      <div id="animeShotWorkspace" class="anime-shot-workspace anime-hidden">
+        <div class="anime-canvas-wrap">
+          <canvas id="animeShotCanvas"></canvas>
+          <div id="animeCropOverlay"></div>
+        </div>
+        <div class="anime-crop-controls">
+          <label>字幕上緣 <input id="animeCropTop" type="range" min="0" max="90" value="56"></label>
+          <label>字幕下緣 <input id="animeCropBottom" type="range" min="10" max="100" value="94"></label>
+          <div class="anime-preset-row">
+            <button type="button" data-anime-crop="jp">日文字幕</button>
+            <button type="button" data-anime-crop="middle">中下方</button>
+            <button type="button" data-anime-crop="all">整張</button>
+          </div>
+          <button id="animeRunOcrBtn" class="anime-primary anime-wide">辨識日文字幕</button>
+          <div id="animeOcrProgress" class="anime-progress anime-hidden">
+            <i id="animeOcrBar"></i>
+          </div>
+          <div id="animeOcrStatus" class="anime-status"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="anime-analysis-column">
+      <label>日文原句
+        <textarea id="animeJapanese" rows="3" placeholder="OCR 結果會出現在這裡，也可以自己修正"></textarea>
+      </label>
+      <div class="anime-two">
+        <label>平假名<textarea id="animeHiragana" rows="2"></textarea></label>
+        <label>片假名<textarea id="animeKatakana" rows="2"></textarea></label>
+      </div>
+      <button id="animeAnalyzeBtn" class="anime-secondary anime-wide">重新分析日文</button>
+
+      <div class="anime-analysis-box">
+        <h3>🔤 單字拆解</h3>
+        <div id="animeTokens" class="anime-token-grid"><span class="anime-muted">辨識後會自動拆解。</span></div>
+      </div>
+
+      <div class="anime-analysis-box">
+        <h3>🧠 文法與語感</h3>
+        <div id="animeGrammar"><span class="anime-muted">辨識後會顯示常見文法提示。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="anime-memory-card">
+    <div id="animeMemoryImage" class="anime-memory-image"><span>截圖會留在這裡，幫助你用情境記憶。</span></div>
+    <div class="anime-memory-fields">
+      <div class="anime-two">
+        <label>動漫中文名稱<input id="animeTitleZh" placeholder="例如：鬼滅之刃"></label>
+        <label>動漫日文名稱<input id="animeTitleJa" placeholder="例如：鬼滅の刃"></label>
+      </div>
+      <div class="anime-two">
+        <label>角色<input id="animeCharacter" placeholder="誰說的？"></label>
+        <label>場景<input id="animeScene" placeholder="例如：準備出發、道歉、提醒"></label>
+      </div>
+      <label>中文意思<textarea id="animeChinese" rows="3"></textarea></label>
+      <div class="anime-helper-row">
+        <button id="animeChineseDraftBtn" class="anime-secondary">產生中文草稿</button>
+        <button id="animeTranslateBtn" class="anime-secondary">Google 翻譯確認</button>
+      </div>
+      <label>這句可以用在哪裡？<textarea id="animeUsage" rows="3" placeholder="例如：服務業接受指示、朋友吐槽、提醒對方注意"></textarea></label>
+      <label>自己的文法／語感筆記<textarea id="animeNote" rows="3"></textarea></label>
+      <div class="anime-two">
+        <label>JLPT<select id="animeLevel"><option>未分類</option><option>N5</option><option>N4</option><option>N3</option><option>N2</option><option>N1</option></select></label>
+        <label>原影片網址<input id="animeVideoUrl" type="url" placeholder="YouTube 或合法觀看網址"></label>
+      </div>
+      <label class="anime-check"><input id="animeVerified" type="checkbox"> 已對照原片確認字幕、讀音與意思</label>
+      <div id="animeUploadStatus" class="anime-upload-status">尚未儲存</div>
+      <button id="animeSaveCloudBtn" class="anime-primary anime-wide">☁️ 儲存圖片＋學習資料到雲端</button>
+    </div>
+  </div>
+</section>
+
     <section class="hero">
       <div>
         <span class="eyebrow">Visual Japanese Learning</span>
@@ -427,5 +519,6 @@
   <script src="firebase-cloud.js"></script>
   <script src="data.js"></script>
   <script src="app.js"></script>
+  <script type="module" src="anime-upload.js"></script>
 </body>
 </html>

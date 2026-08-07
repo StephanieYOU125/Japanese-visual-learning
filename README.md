@@ -56,3 +56,19 @@
 This version keeps Firestore for learning records and adds Firebase Storage support for anime screenshots. When a signed-in user saves a data-image, the app uploads it to `users/{uid}/anime/` and stores the download URL in Firestore. Apply the included `STORAGE_RULES.txt` in Firebase Storage Rules before using cloud image sync.
 
 The OCR workspace also includes an **Auto subtitle crop** helper. It estimates a likely subtitle band from bright/high-contrast text density; users can still fine-tune the crop sliders before OCR.
+
+
+## v10：動漫截圖上傳學習
+新增完整流程：
+- iPhone／電腦上傳動漫截圖
+- 手動裁切字幕範圍
+- Tesseract.js 日文 OCR
+- Kuromoji 平假名、片假名、詞性、原形
+- 單字中文提示
+- 常見文法與使用情境
+- 中文草稿與 Google 翻譯確認
+- Firebase Storage 儲存壓縮截圖
+- Firestore 儲存學習內容、imageUrl、storagePath
+- Storage 路徑：users/{uid}/anime/{imageId}.jpg
+
+請先發布 STORAGE_RULES.txt 中的規則。
