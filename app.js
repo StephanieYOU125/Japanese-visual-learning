@@ -546,6 +546,40 @@ function updateCropOverlay(){
   const top=Number($("#cropTopRange").value),bottom=Number($("#cropBottomRange").value);
   overlay.style.top=`${top}%`;overlay.style.height=`${Math.max(5,bottom-top)}%`;
 }
+function autoDetectSubtitleBand(){
+  if(!ocrSourceImage)return;
+  const canvas=$("#ocrCanvas"),ctx=canvas.getContext("2d");
+  const {width:w,height:h}=canvas;
+  const data=ctx.getImageData(0,0,w,h).data;
+  const scores=new Array(h).fill(0);
+  // 動漫字幕常是亮字＋深色描邊；以下以亮像素與鄰近對比估計字幕密度。
+  for(let y=Math.floor(h*.22);y<h;y+=2){
+    let score=0;
+    for(let x=2;x<w-2;x+=3){
+      const i=(y*w+x)*4;
+      const lum=.299*data[i]+.587*data[i+1]+.114*data[i+2];
+      const j=(y*w+x-2)*4;
+      const lum2=.299*data[j]+.587*data[j+1]+.114*data[j+2];
+      if(lum>185 && Math.abs(lum-lum2)>35) score+=2;
+      else if(lum>220) score+=.35;
+    }
+    scores[y]=score; scores[y+1]=score;
+  }
+  const band=Math.max(36,Math.floor(h*.16));
+  let best=-1,bestY=Math.floor(h*.55);
+  for(let y=Math.floor(h*.25);y<h-band;y+=2){
+    let sum=0; for(let k=y;k<y+band;k+=2)sum+=scores[k];
+    // 稍微偏好中下方，但不強迫字幕一定在最底部。
+    sum*=.9+.25*(y/h);
+    if(sum>best){best=sum;bestY=y;}
+  }
+  const pad=Math.floor(h*.035);
+  const top=Math.max(0,bestY-pad),bottom=Math.min(h,bestY+band+pad);
+  $("#cropTopRange").value=Math.round(top/h*100);
+  $("#cropBottomRange").value=Math.round(bottom/h*100);
+  updateCropOverlay();
+}
+
 function getCroppedCanvas(){
   const source=$("#ocrCanvas"),top=Number($("#cropTopRange").value)/100,bottom=Number($("#cropBottomRange").value)/100;
   const y=Math.round(source.height*top),h=Math.max(1,Math.round(source.height*(bottom-top)));
@@ -613,6 +647,7 @@ $("#cropBottomRange").oninput=()=>{
     $("#cropBottomRange").value=Number($("#cropTopRange").value)+5;
   updateCropOverlay();
 };
+$("#autoCropBtn").onclick=autoDetectSubtitleBand;
 $$("[data-crop]").forEach(btn=>btn.onclick=()=>{
   const p=btn.dataset.crop;
   if(p==="full"){ $("#cropTopRange").value=0;$("#cropBottomRange").value=100; }

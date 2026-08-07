@@ -50,3 +50,9 @@
 - Text/metadata sync across devices
 - Base64 images remain device-local on Spark plan because Cloud Storage is not enabled; bundled `assets/...` images still work everywhere
 - Before GitHub Pages login works, add your GitHub Pages host (for example `stephanieyou125.github.io`) in Firebase Authentication > Settings > Authorized domains.
+
+## v9 cloud image support
+
+This version keeps Firestore for learning records and adds Firebase Storage support for anime screenshots. When a signed-in user saves a data-image, the app uploads it to `users/{uid}/anime/` and stores the download URL in Firestore. Apply the included `STORAGE_RULES.txt` in Firebase Storage Rules before using cloud image sync.
+
+The OCR workspace also includes an **Auto subtitle crop** helper. It estimates a likely subtitle band from bright/high-contrast text density; users can still fine-tune the crop sliders before OCR.

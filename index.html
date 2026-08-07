@@ -365,6 +365,7 @@
           <label><span>字幕範圍上緣</span><input id="cropTopRange" type="range" min="0" max="90" value="45"></label>
           <label><span>字幕範圍下緣</span><input id="cropBottomRange" type="range" min="10" max="100" value="82"></label>
           <div class="crop-presets">
+            <button type="button" id="autoCropBtn">✨ 自動找字幕區</button>
             <button type="button" data-crop="full">整張圖片</button>
             <button type="button" data-crop="middle">畫面中下方</button>
             <button type="button" data-crop="bottom">最下方字幕</button>
@@ -422,6 +423,7 @@
   <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-storage-compat.js"></script>
   <script src="firebase-cloud.js"></script>
   <script src="data.js"></script>
   <script src="app.js"></script>

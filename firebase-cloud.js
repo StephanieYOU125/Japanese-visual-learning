@@ -13,6 +13,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
+const storage = firebase.storage();
 const provider = new firebase.auth.GoogleAuthProvider();
 
 const cloud = {
@@ -37,6 +38,27 @@ const cloud = {
     return copy;
   },
   entriesRef(){ return db.collection("users").doc(this.user.uid).collection("entries"); },
+  async uploadDataImage(entryId, dataUrl){
+    if(!this.user || !dataUrl?.startsWith("data:image/")) return dataUrl;
+    this.status("🖼️ 上傳截圖中…");
+    const blob=await (await fetch(dataUrl)).blob();
+    const ext=(blob.type.split("/")[1]||"jpg").replace("jpeg","jpg");
+    const ref=storage.ref().child(`users/${this.user.uid}/anime/${entryId}.${ext}`);
+    await ref.put(blob,{contentType:blob.type,customMetadata:{entryId}});
+    return await ref.getDownloadURL();
+  },
+  async prepareEntries(entries){
+    const prepared=[];
+    for(const original of entries){
+      const e=JSON.parse(JSON.stringify(original));
+      if(typeof e.image==="string" && e.image.startsWith("data:image/")){
+        try{ e.image=await this.uploadDataImage(e.id,e.image); e.imageLocalOnly=false; }
+        catch(err){ console.error("Storage upload failed",err); e.image=""; e.imageLocalOnly=true; }
+      }
+      prepared.push(e);
+    }
+    return prepared;
+  },
   async loadEntries(){
     if(!this.user) return [];
     const snap = await this.entriesRef().get();
@@ -48,9 +70,13 @@ const cloud = {
     try{
       const ref=this.entriesRef();
       const remote=await ref.get();
-      const localIds=new Set(entries.map(e=>e.id));
+      const prepared=await this.prepareEntries(entries);
+      // 把 Storage URL 回寫本機，讓重新整理後仍使用雲端圖片。
+      prepared.forEach(pe=>{ const local=entries.find(e=>e.id===pe.id); if(local && pe.image) local.image=pe.image; });
+      localStorage.setItem("customJapaneseEntries",JSON.stringify(entries));
+      const localIds=new Set(prepared.map(e=>e.id));
       const ops=[];
-      entries.forEach(e=>ops.push({type:"set", ref:ref.doc(e.id), data:this.sanitizeEntry(e)}));
+      prepared.forEach(e=>ops.push({type:"set", ref:ref.doc(e.id), data:this.sanitizeEntry(e)}));
       remote.docs.forEach(d=>{ if(!localIds.has(d.id)) ops.push({type:"delete",ref:d.ref}); });
       for(let i=0;i<ops.length;i+=400){
         const batch=db.batch();
